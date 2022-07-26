@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.8)
 
 # Add source to this project's executable.
-add_executable (DominoDuck "DominoDuck.cpp" "DominoDuck.h")
+add_executable (DominoDuck "Main.cpp"  "Engine.cpp" "Engine.h" "Window.h" "Window.cpp")
 
 include_directories($ENV{SDL_ROOT}/include)
 
