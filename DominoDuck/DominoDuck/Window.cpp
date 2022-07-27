@@ -22,7 +22,7 @@ namespace dom
 		
 		if (window)
 		{
-
+			
 		}
 		else
 			SDL_Log(SDL_GetError());

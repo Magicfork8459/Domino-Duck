@@ -19,6 +19,12 @@ namespace dom
 			gameWindow = std::make_unique<Window>("Domino Duck");
 	}
 
+	Engine::~Engine()
+	{
+		gameWindow.reset();
+		SDL_Quit();
+	}
+
 	int Engine::run()
 	{
 		int exitCode = 0;
@@ -33,7 +39,11 @@ namespace dom
 				while (SDL_PollEvent(&event) not_eq 0)
 				{
 					isRunning = event.type not_eq SDL_QUIT;
+
+					// pass event to current scene
 				}
+
+				// update scene with delta
 			}
 		}
 		else

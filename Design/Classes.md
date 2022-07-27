@@ -3,11 +3,21 @@ classDiagram
     class Tile
     class Engine
     class Renderer
-
     class Board
     class BoardGenerator
     class Zone
     class Scene
+    class SceneLoader
+    class Preferences {
+        <<abstract>>
+        - updated(Json changes)*
+    }
+
+    class WindowPreferences{
+        - enum WindowMode
+        - int display
+    }
+    class Window
 
     class Movable {
         <<interface>>
@@ -26,6 +36,14 @@ classDiagram
     class MovingWall
     class Mino
     
+    Engine *-- SceneLoader
+    Engine *-- Window
+
+    Window *-- WindowPreferences
+
+    SceneLoader *-- SceneList
+    SceneList *-- Scene
+
     Tile <|-- TriggeringTile
     Tile <|-- BlockingTile
 
@@ -35,6 +53,8 @@ classDiagram
     BlockingTile <|-- Wall
 
     Wall <|-- MovingWall
+
+    Preferences <|-- WindowPreferences
 
     MovingWall *-- Movable
 

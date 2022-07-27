@@ -12,6 +12,7 @@ namespace dom
 	{
 	public:
 		Engine();
+		~Engine();
 
 		int run();
 	private:
