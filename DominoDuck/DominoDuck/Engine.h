@@ -4,6 +4,7 @@
 
 #include "SDL.h"
 
+#include "Preferences.h"
 #include "Window.h"
 
 namespace dom
@@ -18,5 +19,6 @@ namespace dom
 	private:
 		bool isRunning;
 		std::unique_ptr<Window> gameWindow;
+		std::unique_ptr<Preferences> preferences;
 	};
 }

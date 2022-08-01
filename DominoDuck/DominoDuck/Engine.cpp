@@ -12,11 +12,28 @@ namespace dom
 {
 	Engine::Engine()
 		: isRunning(false)
+		
 	{
 		if (SDL_Init(SDL_INIT_VIDEO) not_eq 0)
 			SDL_Log(SDL_GetError());
 		else
+		{
+			size_t requiredSize;
+			std::string pathToAppData;
+
+			//XXX BEGIN Windows specific
+			getenv_s(&requiredSize, NULL, 0, "LOCALAPPDATA");
+
+			pathToAppData.resize(requiredSize);
+
+			if (getenv_s(&requiredSize, &pathToAppData[0], requiredSize, "LOCALAPPDATA") == 0)
+				preferences = std::make_unique<Preferences>(pathToAppData, "Preferences.json");
+			else
+				SDL_LogDebug(SDL_LogCategory::SDL_LOG_CATEGORY_ERROR, "Couldn't create handle to preferences file, will use defaults");
+			//XXX END Windows specific
+
 			gameWindow = std::make_unique<Window>("Domino Duck");
+		}
 	}
 
 	Engine::~Engine()
