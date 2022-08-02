@@ -1,6 +1,7 @@
 #pragma once
 //#include <fpieee.h>
 #include <memory>
+#include <regex>
 
 #include "SDL.h"
 

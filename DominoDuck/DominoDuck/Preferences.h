@@ -11,10 +11,10 @@ namespace dom
 		Preferences();
 		Preferences(std::string path, std::string fileName);
 		
-	private:
-		bool fileExists();
+		void setFileName(std::string fileName);
+		void setPath(std::string path);
 
-		std::string fileName;
-		std::filesystem::path path;
+	private:
+		std::filesystem::path filePath;
 	};
 }

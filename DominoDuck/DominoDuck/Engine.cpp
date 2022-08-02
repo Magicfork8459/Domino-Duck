@@ -27,7 +27,11 @@ namespace dom
 			pathToAppData.resize(requiredSize);
 
 			if (getenv_s(&requiredSize, &pathToAppData[0], requiredSize, "LOCALAPPDATA") == 0)
-				preferences = std::make_unique<Preferences>(pathToAppData, "Preferences.json");
+			{ 
+				//! Truncate null terminators so the path construction works
+				pathToAppData.erase(pathToAppData.begin() + pathToAppData.find_first_of('\0'), pathToAppData.end());
+				preferences = std::make_unique<Preferences>(pathToAppData.append("\\DominoDuck\\Configuration\\"), "Preferences.json");
+			}
 			else
 				SDL_LogDebug(SDL_LogCategory::SDL_LOG_CATEGORY_ERROR, "Couldn't create handle to preferences file, will use defaults");
 			//XXX END Windows specific

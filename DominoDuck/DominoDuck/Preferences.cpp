@@ -9,20 +9,30 @@ namespace dom
 	}
 
 	Preferences::Preferences(std::string path, std::string fileName)
-		: fileName(fileName)
-		, path(path)
+		: filePath(path + fileName)
 	{
-		fileExists();
+		if (not std::filesystem::exists(filePath))
+		{
+			//XXX For more general use, should sanitize the path
+			std::filesystem::create_directories(path);
+			//TODO create a preferences file with defaults in the newly created directory
+		}
+
+		setPath("test");
 	}
 
-	bool Preferences::fileExists()
+	void Preferences::setFileName(std::string fileName)
 	{
-		//XXX seems to append in place, so have to do this differently
-		std::filesystem::path pathToPreferences = path.append(fileName);
-		//TODO check %LOCALAPPDATA%/DominoDuck/Configuration
-		if (std::filesystem::exists(pathToPreferences))
-			std::cout << "Hey!" << std::endl;
+		filePath.replace_filename(fileName);
+	}
 
-		return false;
+	void Preferences::setPath(std::string path)
+	{
+		if (std::filesystem::exists(path))
+		{
+			std::string fileName = filePath.filename().string();
+
+			filePath = path.append(fileName);
+		}
 	}
 }
