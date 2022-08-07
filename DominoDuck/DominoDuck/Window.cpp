@@ -29,6 +29,9 @@ namespace dom
 	Window::Window(const std::string& title)
 		: window(NULL)
 	{
+		preferences.setDirectory(title + "/WindowSettings");
+
+
 		SDL_Rect displayRect;
 		if (SDL_GetDisplayUsableBounds(0, &displayRect) not_eq 0)
 			SDL_Log(SDL_GetError());

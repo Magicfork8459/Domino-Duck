@@ -17,23 +17,7 @@ namespace dom
 			SDL_Log(SDL_GetError());
 		else
 		{
-			size_t requiredSize;
-			std::string pathToAppData;
-
-			//XXX BEGIN Windows specific
-			//TODO Need to move this file stuff into preferences class or something
-			//getenv_s(&requiredSize, NULL, 0, "LOCALAPPDATA");
-
-			//pathToAppData.resize(requiredSize);
-
-			//if (getenv_s(&requiredSize, &pathToAppData[0], requiredSize, "LOCALAPPDATA") == 0)
-			//{ 
-			//	//! Truncate null terminators so the path construction works
-			//	pathToAppData.erase(pathToAppData.begin() + pathToAppData.find_first_of('\0'), pathToAppData.end());
-			//}
-			//else
-			//	SDL_LogDebug(SDL_LogCategory::SDL_LOG_CATEGORY_ERROR, "Couldn't create handle to preferences file, will use defaults");
-			//XXX END Windows specific
+			
 
 			gameWindow = std::make_unique<Window>("Domino Duck");
 		}
