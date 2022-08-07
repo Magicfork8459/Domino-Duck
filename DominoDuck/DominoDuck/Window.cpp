@@ -11,6 +11,21 @@
 
 namespace dom
 {
+	WindowSettings::WindowSettings()
+		: fullscreen(true)
+		, borderless(true)
+		, display(0)
+	{
+
+	}
+
+	void WindowSettings::setFullscreen(const bool& fullscreen)
+	{
+		this->fullscreen = fullscreen;
+
+		//TODO emit signal to window so it can update
+	}
+
 	Window::Window(const std::string& title)
 		: window(NULL)
 	{
