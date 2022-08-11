@@ -40,10 +40,10 @@ namespace dom
 		
 		if (window)
 		{
-			
+
 		}
 		else
-			SDL_Log(SDL_GetError());
+			StaticLogger::log(CharSeverity::E, SDL_GetError());
 	}
 
 	Window::~Window()

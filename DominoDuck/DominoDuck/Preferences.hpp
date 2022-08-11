@@ -8,6 +8,8 @@
 #include <boost\json.hpp>
 #include <boost\format.hpp>
 
+#include "StaticLogger.h"
+
 namespace dom
 {
 	template
@@ -107,11 +109,11 @@ namespace dom
 			pathToAppData.resize(requiredSize);
 
 			if (getenv_s(&requiredSize, &pathToAppData[0], requiredSize, "LOCALAPPDATA") == 0)
-			{ 
+			{
 				//! Truncate null terminators so the path construction works
 				pathToAppData.erase(pathToAppData.begin() + pathToAppData.find_first_of('\0'), pathToAppData.end());
 				this->directory = pathToAppData.append(directory);
-
+				StaticLogger::log(CharSeverity::D, this->directory.string());
 				if (not std::filesystem::exists(this->directory))
 				{
 					try
@@ -120,12 +122,12 @@ namespace dom
 					}
 					catch (const std::filesystem::filesystem_error& exception)
 					{
-						SDL_LogError(SDL_LogCategory::SDL_LOG_CATEGORY_ERROR, exception.what());
+						StaticLogger::log(CharSeverity::E, exception.what());
 					}
 				}
 			}
 			else
-				SDL_LogDebug(SDL_LogCategory::SDL_LOG_CATEGORY_ERROR, boost::str(boost::format("Unable to set directory %1%") % directory).c_str());
+				StaticLogger::log(CharSeverity::E, boost::str(boost::format("Unable to set directory %1%") % directory).c_str());
 			
         }
 		//XXX END Windows specific

@@ -5,6 +5,7 @@
 #include "SDL.h"
 
 #include "Preferences.hpp"
+#include "StaticLogger.h"
 
 namespace dom
 {
