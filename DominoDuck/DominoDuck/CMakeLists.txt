@@ -1,7 +1,4 @@
-﻿# CMakeList.txt : CMake project for DominoDuck, include source and define
-# project specific logic here.
-#
-cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.8)
 
 file(GLOB SOURCE
 	${PROJECT_SOURCE_DIR}/DominoDuck/*.cpp
@@ -9,18 +6,10 @@ file(GLOB SOURCE
 	${PROJECT_SOURCE_DIR}/DominoDuck/*.h
 )
 
-file(TO_CMAKE_PATH $ENV{BOOST_ROOT} BOOST_ROOT)
-
-# Add source to this project's executable.
 add_executable (DominoDuck ${SOURCE})
-#add_definitions(-DBOOST_ALL_DYN_LINK)
+add_dependencies(DominoDuck GlobalLogger)
 
 set(CMAKE_PREFIX_PATH $ENV{SDL_ROOT}/lib/x64)
-set(Boost_USE_STATIC_LIBS		ON)
-set(Boost_USE_MULTITHREADED		ON)
-set(Boost_USE_STATIC_RUNTIME	ON)
-
-find_package(Boost 1.79.0 COMPONENTS describe mp11 json)
 
 find_library( SDL
 	NAMES SDL2
@@ -40,6 +29,7 @@ set(LIBS
 include_directories(
 	$ENV{SDL_ROOT}/include
 	${Boost_INCLUDE_DIRS}
+	${PROJECT_SOURCE_DIR}/GlobalLogger
 )
 
 #XXX Shouldn't have to use this, must be doing something wrong with the find_package for boost
@@ -50,6 +40,7 @@ target_link_directories(DominoDuck PUBLIC
 target_link_libraries(DominoDuck
 	${LIBS}
 	${Boost_LIBRARIES}
+	GlobalLogger
 )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

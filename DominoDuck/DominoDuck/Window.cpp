@@ -29,7 +29,7 @@ namespace dom
 	Window::Window(const std::string& title)
 		: window(NULL)
 	{
-		preferences.setDirectory(title + "/WindowSettings");
+		//preferences.setDirectory(title + "/WindowSettings");
 
 
 		SDL_Rect displayRect;
@@ -38,12 +38,10 @@ namespace dom
 		
 		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, displayRect.w, displayRect.h, SDL_WINDOW_SHOWN);
 		
-		if (window)
-		{
-
+		if (not window) 
+		{ 
+			GLOBAL_LOG_ERROR(SDL_GetError()); 
 		}
-		else
-			StaticLogger::log(CharSeverity::E, SDL_GetError());
 	}
 
 	Window::~Window()

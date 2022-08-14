@@ -8,7 +8,7 @@
 #include <boost\json.hpp>
 #include <boost\format.hpp>
 
-#include "StaticLogger.h"
+#include "GlobalLogger.h"
 
 namespace dom
 {
@@ -98,6 +98,7 @@ namespace dom
 
 		//XXX BEGIN Windows specific
 		//TODO crossplatform version
+		// // TODO duplicate code, remove
         //! Sets the directory name to be used within LOCALAPPDATA
         void setDirectory(const std::string& directory)
         {
@@ -113,7 +114,7 @@ namespace dom
 				//! Truncate null terminators so the path construction works
 				pathToAppData.erase(pathToAppData.begin() + pathToAppData.find_first_of('\0'), pathToAppData.end());
 				this->directory = pathToAppData.append(directory);
-				StaticLogger::log(CharSeverity::D, this->directory.string());
+				GLOBAL_LOG_DEBUG(this->directory.string());
 				if (not std::filesystem::exists(this->directory))
 				{
 					try
@@ -122,12 +123,13 @@ namespace dom
 					}
 					catch (const std::filesystem::filesystem_error& exception)
 					{
-						StaticLogger::log(CharSeverity::E, exception.what());
+						GLOBAL_LOG_ERROR(exception.what());
 					}
 				}
 			}
 			else
-				StaticLogger::log(CharSeverity::E, boost::str(boost::format("Unable to set directory %1%") % directory).c_str());
+				GLOBAL_LOG_ERROR(boost::str(boost::format("Unable to set directory %1%") % directory).c_str());
+			
 			
         }
 		//XXX END Windows specific
