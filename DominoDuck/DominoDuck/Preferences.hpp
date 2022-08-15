@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <filesystem>
+#include <fstream>
 #include <string>
 
 #include <boost\describe.hpp>
@@ -60,6 +61,7 @@ namespace dom
         >
         class Preferences
     {
+		const std::string FILENAME = "preferences.json";
     public:
 
         Preferences()
@@ -96,43 +98,67 @@ namespace dom
             return boost::json::value_to<Settings>(value);
         }
 
-		//XXX BEGIN Windows specific
-		//TODO crossplatform version
-		// // TODO duplicate code, remove
-        //! Sets the directory name to be used within LOCALAPPDATA
-        void setDirectory(const std::string& directory)
-        {
-			std::string pathToAppData;
-			size_t requiredSize;
+		bool load()
+		{
+			std::filesystem::path pathToPreferences = directory.append(FILENAME);
+			bool succeeded = std::filesystem::exists(pathToPreferences);
 
-			getenv_s(&requiredSize, NULL, 0, "LOCALAPPDATA");
-
-			pathToAppData.resize(requiredSize);
-
-			if (getenv_s(&requiredSize, &pathToAppData[0], requiredSize, "LOCALAPPDATA") == 0)
+			if (succeeded)
 			{
-				//! Truncate null terminators so the path construction works
-				pathToAppData.erase(pathToAppData.begin() + pathToAppData.find_first_of('\0'), pathToAppData.end());
-				this->directory = pathToAppData.append(directory);
-				GLOBAL_LOG_DEBUG(this->directory.string());
-				if (not std::filesystem::exists(this->directory))
+				std::ifstream file(pathToPreferences, std::ios::beg);
+				succeeded = file.good();
+
+				if (succeeded)
 				{
+					size_t fileSize = file.tellg();
+					std::string jsonString(fileSize, '\0');
+					file.read(&jsonString[0], fileSize);
+					file.close();
+
 					try
 					{
-						std::filesystem::create_directories(this->directory);
+						this->settings = fromJson(boost::json::parse(jsonString));
 					}
-					catch (const std::filesystem::filesystem_error& exception)
+					//XXX Can throw on json parse, need to get specific exception
+					catch (const std::exception& exception)
 					{
 						GLOBAL_LOG_ERROR(exception.what());
 					}
 				}
 			}
-			else
-				GLOBAL_LOG_ERROR(boost::str(boost::format("Unable to set directory %1%") % directory).c_str());
+
 			
-			
+
+			return succeeded;
+		}
+
+        void setDirectory(const std::string& directory)
+        {
+			std::filesystem::path pathToFile = GlobalLogger::settings.path;
+			{
+				pathToFile.remove_filename();
+				pathToFile += (directory);
+				pathToFile.make_preferred();
+			}
+			bool succeeded = std::filesystem::exists(pathToFile);
+
+			if (not succeeded)
+			{
+				try
+				{
+					succeeded = std::filesystem::create_directories(pathToFile);
+				}
+				catch (const std::filesystem::filesystem_error& exception)
+				{
+					GLOBAL_LOG_ERROR(exception.what());
+				}
+			}
+
+			if (succeeded)
+			{
+				this->directory = pathToFile;
+			}
         }
-		//XXX END Windows specific
 
         void setSettings(Settings settings)
         {

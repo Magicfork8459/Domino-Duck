@@ -29,8 +29,14 @@ namespace dom
 	Window::Window(const std::string& title)
 		: window(NULL)
 	{
-		//preferences.setDirectory(title + "/WindowSettings");
-
+		preferences.setDirectory("WindowSettings");
+		// try a load
+		if (preferences.load())
+		{
+			GLOBAL_LOG_DEBUG("loaded previous settings");
+		}
+		// otherwise use defaults
+			// save defaults
 
 		SDL_Rect displayRect;
 		if (SDL_GetDisplayUsableBounds(0, &displayRect) not_eq 0)
