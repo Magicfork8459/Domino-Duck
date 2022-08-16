@@ -33,7 +33,14 @@ namespace dom
 	template<typename Value>
 	inline static void getValueFromJson(const boost::json::object& object, const std::string& name, Value& value)
 	{
-		value = boost::json::value_to<Value>(object.at(name));
+		try
+		{
+			value = boost::json::value_to<Value>(object.at(name));
+		}
+		catch (const std::out_of_range& exception)
+		{
+			std::cerr << exception.what() << std::endl;
+		}
 	}
 
 	template
@@ -105,29 +112,30 @@ namespace dom
 
 			if (succeeded)
 			{
-				std::ifstream file(pathToPreferences, std::ios::beg);
+				std::ifstream file(pathToPreferences, std::ios::in);
 				succeeded = file.good();
 
 				if (succeeded)
 				{
-					size_t fileSize = file.tellg();
-					std::string jsonString(fileSize, '\0');
-					file.read(&jsonString[0], fileSize);
+					std::stringstream readBuffer;
+					{
+						readBuffer << file.rdbuf();
+					}
+					std::string jsonString(readBuffer.str());
+					
 					file.close();
 
 					try
 					{
 						this->settings = fromJson(boost::json::parse(jsonString));
 					}
-					//XXX Can throw on json parse, need to get specific exception
-					catch (const std::exception& exception)
+					catch (const boost::system::system_error& exception)
 					{
+						succeeded = false;
 						GLOBAL_LOG_ERROR(exception.what());
 					}
 				}
 			}
-
-			
 
 			return succeeded;
 		}
