@@ -11,26 +11,42 @@
 
 namespace dom
 {
-	WindowSettings::WindowSettings()
+	/*WindowSettings::WindowSettings()
 		: fullscreen(true)
 		, borderless(true)
 		, display(0)
 	{
 
-	}
+	}*/
 
-	void WindowSettings::setFullscreen(const bool& fullscreen)
+	/*const bool& WindowSettings::isFullscreen()
 	{
-		this->fullscreen = fullscreen;
+		return fullscreen;
+	}*/
 
-		//TODO emit signal to window so it can update
+	//void WindowSettings::setFullscreen(const bool& fullscreen)
+	//{
+	//	this->fullscreen = fullscreen;
+
+	//	//TODO emit signal to window so it can update
+	//}
+
+	void WindowSettings::operator=(const WindowSettings& settings)
+	{
+		this->fullscreen = settings.fullscreen;
+		this->borderless = settings.borderless;
+		this->display = settings.display;
+		this->width = settings.width;
+		this->height = settings.height;
 	}
 
 	Window::Window(const std::string& title)
 		: window(NULL)
 	{
+		int windowFlags = SDL_WINDOW_SHOWN;
+
 		preferences.setDirectory("WindowSettings");
-		// try a load
+		
 		if (preferences.load())
 		{
 			GLOBAL_LOG_DEBUG("loaded previous settings");
@@ -38,20 +54,48 @@ namespace dom
 		// otherwise use defaults
 			// save defaults
 
-		SDL_Rect displayRect;
+		WindowSettings settings = preferences.getSettings();
+		/*SDL_Rect displayRect;
 		if (SDL_GetDisplayUsableBounds(0, &displayRect) not_eq 0)
-			SDL_Log(SDL_GetError());
+			SDL_Log(SDL_GetError());*/
 		
-		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, displayRect.w, displayRect.h, SDL_WINDOW_SHOWN);
+		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 0, 0, windowFlags);
 		
-		if (not window) 
-		{ 
-			GLOBAL_LOG_ERROR(SDL_GetError()); 
+		if (not window)
+		{
+			GLOBAL_LOG_ERROR(SDL_GetError());
+			throw "Window failed to initialize";
+		}
+		else
+		{
+			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+			applySettings();
 		}
 	}
 
 	Window::~Window()
 	{
+		SDL_DestroyRenderer(renderer);
 		SDL_DestroyWindow(window);
+	}
+
+	void Window::render()
+	{
+		// Just want a blank screen for testing our window stuff for now
+		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+		SDL_RenderClear(renderer);
+		SDL_RenderPresent(renderer);
+	}
+
+	/*const SDL_Renderer* Window::getRenderer()
+	{
+		return renderer;
+	}*/
+
+	void Window::applySettings()
+	{
+		auto settings = preferences.getSettings();
+		//XXX Resolution sucks, need to fix
+		SDL_SetWindowFullscreen(window, settings.fullscreen);
 	}
 }

@@ -37,9 +37,9 @@ namespace dom
 		{
 			value = boost::json::value_to<Value>(object.at(name));
 		}
-		catch (const std::out_of_range& exception)
+		catch (const std::out_of_range&)
 		{
-			std::cerr << exception.what() << std::endl;
+			std::cerr << "Member " << name << " missing from json" << std::endl;
 		}
 	}
 
@@ -172,6 +172,11 @@ namespace dom
         {
             this->settings = settings;
         }
+
+		const Settings& getSettings()
+		{
+			return settings;
+		}
 
     private:
         Settings settings;

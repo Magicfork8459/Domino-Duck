@@ -48,6 +48,7 @@ namespace dom
 				}
 
 				// update scene with delta
+				gameWindow->render();
 			}
 		}
 		else
