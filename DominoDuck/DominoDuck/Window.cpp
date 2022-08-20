@@ -35,7 +35,6 @@ namespace dom
 	{
 		this->fullscreen = settings.fullscreen;
 		this->borderless = settings.borderless;
-		this->display = settings.display;
 		this->width = settings.width;
 		this->height = settings.height;
 	}
@@ -51,15 +50,10 @@ namespace dom
 		{
 			GLOBAL_LOG_DEBUG("loaded previous settings");
 		}
-		// otherwise use defaults
-			// save defaults
 
 		WindowSettings settings = preferences.getSettings();
-		/*SDL_Rect displayRect;
-		if (SDL_GetDisplayUsableBounds(0, &displayRect) not_eq 0)
-			SDL_Log(SDL_GetError());*/
 		
-		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 0, 0, windowFlags);
+		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, settings.width, settings.height, windowFlags);
 		
 		if (not window)
 		{
@@ -87,15 +81,17 @@ namespace dom
 		SDL_RenderPresent(renderer);
 	}
 
-	/*const SDL_Renderer* Window::getRenderer()
-	{
-		return renderer;
-	}*/
-
 	void Window::applySettings()
 	{
 		auto settings = preferences.getSettings();
-		//XXX Resolution sucks, need to fix
-		SDL_SetWindowFullscreen(window, settings.fullscreen);
+		int fullscreenFlag = settings.fullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0;
+
+		if (not settings.fullscreen)
+		{
+			SDL_SetWindowSize(window, settings.height, settings.width);
+		}
+
+		SDL_SetWindowBordered(window, settings.borderless ? SDL_FALSE : SDL_TRUE);
+		SDL_SetWindowFullscreen(window, fullscreenFlag);
 	}
 }

@@ -9,25 +9,20 @@
 
 namespace dom
 {
+	//? Other potentially useful settings
+	//- X/Y Position
+	//- Display
 	struct WindowSettings
 	{
-		const int DEFAULT_HEIGHT = 768;
-		const int DEFAULT_WIDTH = 1366;
-
 		void operator=(const WindowSettings& settings);
 
-		bool fullscreen { false };
+		bool fullscreen { true };
 		bool borderless { false };
-		int display { 0 };
-		int width { DEFAULT_WIDTH };
-		int height { DEFAULT_HEIGHT };
-		//? x/y position?
-
-		//BOOST_DESCRIBE_CLASS(WindowSettings, (), (), (), (fullscreen, borderless, display, width, height))
-		
+		int width { 0 };
+		int height { 0 };
 	};
 
-	BOOST_DESCRIBE_STRUCT(WindowSettings, (), (fullscreen, borderless, display, width, height));
+	BOOST_DESCRIBE_STRUCT(WindowSettings, (), (fullscreen, borderless, width, height));
 
 	class Window
 	{
@@ -39,6 +34,7 @@ namespace dom
 		//const SDL_Renderer* getRenderer();
 
 	private:
+
 		void applySettings();
 
 		SDL_Window* window;
