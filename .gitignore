@@ -12,3 +12,4 @@ _deps
 
 DominoDuck/.vs/
 DominoDuck/out/
+*.code-workspace
