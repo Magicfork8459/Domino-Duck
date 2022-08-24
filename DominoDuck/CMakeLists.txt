@@ -11,7 +11,7 @@ set(Boost_USE_STATIC_LIBS		ON)
 set(Boost_USE_MULTITHREADED		ON)
 set(Boost_USE_STATIC_RUNTIME	ON)
 
-find_package(Boost 1.79.0 COMPONENTS describe mp11 json log)
+find_package(Boost 1.79.0 COMPONENTS describe mp11 json log signals2)
 
 # Include sub-projects.
 add_subdirectory ("DominoDuck")

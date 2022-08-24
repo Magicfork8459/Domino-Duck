@@ -48,6 +48,8 @@ namespace dom
 				}
 
 				// update scene with delta
+				//std::cout << clock.elapsed() << std::endl;
+				clock.restart();
 				gameWindow->render();
 			}
 		}

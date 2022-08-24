@@ -6,6 +6,7 @@
 #include "SDL.h"
 
 #include "Window.h"
+#include "GameClock.h"
 
 namespace dom
 {
@@ -19,5 +20,6 @@ namespace dom
 	private:
 		bool isRunning;
 		std::unique_ptr<Window> gameWindow;
+		GameClock clock;
 	};
 }
