@@ -42,9 +42,8 @@ namespace dom
 			{
 				while (SDL_PollEvent(&event) not_eq 0)
 				{
-					isRunning = event.type not_eq SDL_QUIT;
-
-					// pass event to current scene
+					if (isRunning = event.type not_eq SDL_QUIT)
+						eventSignaller.processEvent(event);
 				}
 
 				// update scene with delta
