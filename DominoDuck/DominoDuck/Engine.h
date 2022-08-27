@@ -8,6 +8,7 @@
 #include "Window.h"
 #include "GameClock.h"
 #include "EventSignaller.h"
+#include "Scene.h"
 
 namespace dom
 {
@@ -22,6 +23,7 @@ namespace dom
 		bool isRunning;
 		std::unique_ptr<Window> gameWindow;
 		GameClock clock;
-		EventSignaller eventSignaller;
+		//EventSignaller eventSignaller;
+		// scene queue?
 	};
 }

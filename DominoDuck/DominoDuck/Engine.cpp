@@ -17,7 +17,10 @@ namespace dom
 			SDL_Log(SDL_GetError());
 		else
 		{
-			
+			EventSignaller::registerForEvent<EventSignaller::KeyboardEventSignal>(SDL_KEYDOWN, [](const SDL_KeyboardEvent& keyboardEvent)
+				{
+					std::cout << "Key: " << keyboardEvent.keysym.sym << std::endl;
+				});
 
 			gameWindow = std::make_unique<Window>("Domino Duck");
 		}
@@ -37,13 +40,20 @@ namespace dom
 		{
 			SDL_Event event;
 			isRunning = true;
+			TestScene scene;
+			scene.load();
+
+			EventSignaller::registerForEvent<EventSignaller::KeyboardEventSignal>(SDL_KEYUP, [&](const SDL_KeyboardEvent& keyboardEvent) 
+				{
+					if (keyboardEvent.keysym.sym == SDL_KeyCode::SDLK_u)
+						scene.unload();
+				});
 
 			while (isRunning)
 			{
 				while (SDL_PollEvent(&event) not_eq 0)
 				{
-					if (isRunning = event.type not_eq SDL_QUIT)
-						eventSignaller.processEvent(event);
+					EventSignaller::processEvent(event);
 				}
 
 				// update scene with delta
