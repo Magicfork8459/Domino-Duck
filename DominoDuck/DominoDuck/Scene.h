@@ -8,21 +8,26 @@ namespace dom
 	class Scene
 	{
 	public:
-		//virtual void update(delta) = 0;
+		Scene();
+
+		virtual void update(unsigned long long deltaTime) = 0;
+		bool hasFinished() const;
+
 	protected:
 		virtual bool load() = 0;
 		virtual bool unload() = 0;
+		
 
 		std::list<boost::signals2::connection> connections;
-	private:
-		//
+		bool finished;
 	};
 
-	class TestScene : virtual Scene
+	class TimedStaticScene : public virtual Scene
 	{
 	public:
-		TestScene();
+		TimedStaticScene();
 		bool load() override;
 		bool unload() override;
+		void update(unsigned long long deltaTime) override;
 	};
 }

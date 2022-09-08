@@ -6,6 +6,7 @@
 
 #include "Preferences.hpp"
 #include "GlobalLogger.h"
+#include "Renderable.h"
 
 namespace dom
 {
@@ -32,9 +33,9 @@ namespace dom
 
 		void render();
 		//const SDL_Renderer* getRenderer();
-
+		// setScene(scene*)
 	private:
-
+		SDL_Rect getDisplayRect();
 		void applySettings();
 
 		SDL_Window* window;

@@ -53,7 +53,7 @@ namespace dom
 
 		WindowSettings settings = preferences.getSettings();
 		
-		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, settings.width, settings.height, windowFlags);
+		window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, settings.width, settings.height, windowFlags);
 		
 		if (not window)
 		{
@@ -62,7 +62,7 @@ namespace dom
 		}
 		else
 		{
-			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+			renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 			applySettings();
 		}
 	}
@@ -75,10 +75,28 @@ namespace dom
 
 	void Window::render()
 	{
+		// render from renderables queue
+
 		// Just want a blank screen for testing our window stuff for now
 		SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		SDL_RenderClear(renderer);
+
+		//TODO circular buffer instead? Probably don't want to reconstruct a queue every frame
+		while (not renderingQueue.empty())
+		{
+			renderingQueue.front().render(*renderer);
+			renderingQueue.pop();
+		}
+
 		SDL_RenderPresent(renderer);
+	}
+
+	SDL_Rect Window::getDisplayRect()
+	{
+		SDL_Rect returnRect;
+
+		SDL_GetDisplayUsableBounds(0, &returnRect);
+		return returnRect;
 	}
 
 	void Window::applySettings()
@@ -88,7 +106,10 @@ namespace dom
 
 		if (not settings.fullscreen)
 		{
+			auto displayRect = getDisplayRect();
+			
 			SDL_SetWindowSize(window, settings.height, settings.width);
+			SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 		}
 
 		SDL_SetWindowBordered(window, settings.borderless ? SDL_FALSE : SDL_TRUE);

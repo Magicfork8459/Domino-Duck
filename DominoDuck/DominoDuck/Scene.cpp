@@ -2,17 +2,27 @@
 
 namespace dom
 {
-	TestScene::TestScene()
+	Scene::Scene()
+		: finished(false)
+	{
+
+	}
+	bool Scene::hasFinished() const
+	{
+		return finished;
+	}
+
+	TimedStaticScene::TimedStaticScene()
 		: Scene()
 	{
 	}
 
-	bool TestScene::load()
+	bool TimedStaticScene::load()
 	{
-		
+		// load associated assets to global
+
 		auto e = EventSignaller::registerForEvent<EventSignaller::KeyboardEventSignal>(SDL_KEYUP, [](const SDL_KeyboardEvent& keyboardEvent)
 			{
-				//! Put this stuff in a load
 				switch (keyboardEvent.keysym.sym)
 				{
 				case SDL_KeyCode::SDLK_RETURN:
@@ -29,7 +39,7 @@ namespace dom
 		return true;
 	}
 
-	bool TestScene::unload()
+	bool TimedStaticScene::unload()
 	{
 		for (auto& connection : connections)
 		{
@@ -39,5 +49,10 @@ namespace dom
 		connections.clear();
 
 		return false;
+	}
+
+	void TimedStaticScene::update(unsigned long long deltaTime)
+	{
+		std::cout << deltaTime << std::endl;
 	}
 }

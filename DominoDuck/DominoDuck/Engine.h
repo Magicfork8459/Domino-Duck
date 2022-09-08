@@ -1,6 +1,7 @@
 #pragma once
 //#include <fpieee.h>
 #include <memory>
+#include <queue>
 #include <regex>
 
 #include "SDL.h"
@@ -23,7 +24,6 @@ namespace dom
 		bool isRunning;
 		std::unique_ptr<Window> gameWindow;
 		GameClock clock;
-		//EventSignaller eventSignaller;
-		// scene queue?
+		std::queue<std::shared_ptr<Scene>> sceneQueue;
 	};
 }

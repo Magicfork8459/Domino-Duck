@@ -17,10 +17,14 @@ namespace dom
 			SDL_Log(SDL_GetError());
 		else
 		{
-			EventSignaller::registerForEvent<EventSignaller::KeyboardEventSignal>(SDL_KEYDOWN, [](const SDL_KeyboardEvent& keyboardEvent)
+			/*EventSignaller::registerForEvent<EventSignaller::KeyboardEventSignal>(SDL_KEYDOWN, [](const SDL_KeyboardEvent& keyboardEvent)
 				{
 					std::cout << "Key: " << keyboardEvent.keysym.sym << std::endl;
-				});
+				});*/
+
+			//TODO just testing here
+			//Scene* s = new TimedStaticScene();
+			sceneQueue.emplace(std::make_shared<TimedStaticScene>());
 
 			gameWindow = std::make_unique<Window>("Domino Duck");
 		}
@@ -40,7 +44,7 @@ namespace dom
 		{
 			SDL_Event event;
 			isRunning = true;
-			TestScene scene;
+			TimedStaticScene scene;
 			scene.load();
 
 			EventSignaller::registerForEvent<EventSignaller::KeyboardEventSignal>(SDL_KEYUP, [&](const SDL_KeyboardEvent& keyboardEvent) 
@@ -53,11 +57,18 @@ namespace dom
 			{
 				while (SDL_PollEvent(&event) not_eq 0)
 				{
+					isRunning = event.type not_eq SDL_QUIT;
+
 					EventSignaller::processEvent(event);
 				}
 
-				// update scene with delta
-				//std::cout << clock.elapsed() << std::endl;
+				if (not sceneQueue.front()->hasFinished())
+				{
+					sceneQueue.front()->update(clock.elapsed());
+				}
+				else
+					sceneQueue.pop();
+
 				clock.restart();
 				gameWindow->render();
 			}
