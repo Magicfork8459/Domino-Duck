@@ -1,5 +1,5 @@
 #pragma once
-//#include <fpieee.h>
+
 #include <memory>
 #include <queue>
 #include <regex>
@@ -10,6 +10,7 @@
 #include "GameClock.h"
 #include "EventSignaller.h"
 #include "Scene.h"
+#include "AssetManager.h"
 
 namespace dom
 {
@@ -25,5 +26,6 @@ namespace dom
 		std::unique_ptr<Window> gameWindow;
 		GameClock clock;
 		std::queue<std::shared_ptr<Scene>> sceneQueue;
+
 	};
 }

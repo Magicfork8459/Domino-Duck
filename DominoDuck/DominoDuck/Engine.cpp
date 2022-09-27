@@ -23,6 +23,7 @@ namespace dom
 				});*/
 
 			//TODO just testing here
+			//assetManager.registerAssets();
 			//Scene* s = new TimedStaticScene();
 			sceneQueue.emplace(std::make_shared<TimedStaticScene>());
 
